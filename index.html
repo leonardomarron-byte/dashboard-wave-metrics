@@ -1270,25 +1270,21 @@
 
     <script>
     // --------------------------------------------------
-    // SCRIPT PARA VINCULACIÓN DE DATOS EN TIEMPO REAL (Método JSONP)
+    // SCRIPT PARA VINCULACIÓN DE DATOS EN TIEMPO REAL (Método XHR - Antiguo pero Robusto)
     // --------------------------------------------------
 
     // 🟢 ¡TU URL DE API! 🟢
-    // Nota: Esta URL no cambia, pero le añadiremos el parámetro 'callback'
-    const API_URL_BASE = 'https://script.google.com/a/macros/plata.work/s/AKfycbwK97hq4EeXw2ERoAB2y_iYf8CVJgHn-H_ntFvHUVi3HPw8EwVtu3LBZNn4BIFmzGMp/exec'; 
+    const API_URL = 'https://script.google.com/a/macros/plata.work/s/AKfycbwK97hq4EeXw2ERoAB2y_iYf8CVJgHn-H_ntFvHUVi3HPw8EwVtu3LBZNn4BIFmzGMp/exec'; 
     
     // Frecuencia de actualización: 30 segundos
     const UPDATE_INTERVAL_MS = 30000; 
 
-    /**
-     * Aplica la clase de color (semáforo) al valor de una métrica.
-     * [Este código de semáforo es el mismo que antes]
-     */
+    // [ ... CÓDIGO applyColor (Semáforo) - NO LO CAMBIAMOS ... ]
     function applyColor(element, metricName, value) {
         element.classList.remove('good-metric', 'warn-metric', 'bad-metric');
         const numValue = parseFloat(value);
         if (isNaN(numValue)) return; 
-        // ... (lógica del semáforo: QA/DNC alto es bueno; Lateness bajo es bueno)
+        
         switch (metricName) {
             case 'QA':
             case 'DNC':
@@ -1307,16 +1303,46 @@
         }
     }
 
-    /**
-     * Función que recibe los datos directamente de la API (JSONP).
-     * El nombre de esta función debe coincidir con el parámetro 'callback'.
-     */
-    window.handleMetricsResponse = function(data) {
-        const lastUpdatedElement = document.getElementById('last-updated');
-        
+    // --------------------------------------------------
+    // FUNCIÓN PRINCIPAL: Obtiene datos y actualiza el DOM (USANDO XHR)
+    // --------------------------------------------------
+
+    function actualizarDashboard() {
+        document.getElementById('last-updated').textContent = 'Actualizando...';
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', API_URL, true); // True para ser asíncrono
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                try {
+                    // Intenta parsear la respuesta como JSON
+                    const data = JSON.parse(xhr.responseText);
+                    procesarDatos(data); // Llama a la función que maneja la actualización del DOM
+                } catch (e) {
+                    document.getElementById('last-updated').textContent = 'ERROR (Formato JSON inválido)';
+                    console.error('Error al parsear JSON:', e);
+                }
+            } else {
+                document.getElementById('last-updated').textContent = 'ERROR (Código HTTP: ' + xhr.status + ')';
+                console.error('Error al cargar la API. Código de estado:', xhr.status);
+            }
+        };
+
+        xhr.onerror = function() {
+            document.getElementById('last-updated').textContent = 'ERROR (Fallo de red al cargar el script)';
+            console.error('Fallo de red/API: No se pudo establecer conexión XHR.');
+        };
+
+        xhr.send();
+    }
+    
+    // --------------------------------------------------
+    // FUNCIÓN PARA PROCESAR Y MOSTRAR DATOS
+    // --------------------------------------------------
+
+    function procesarDatos(data) {
         if (!data || data.error) {
-            lastUpdatedElement.textContent = 'ERROR (API: ' + (data ? data.error : 'Sin datos') + ')';
-            console.error('Error al recibir datos de la API:', data);
+            document.getElementById('last-updated').textContent = 'ERROR (API: ' + (data ? data.error : 'Sin datos') + ')';
             return;
         }
 
@@ -1359,34 +1385,8 @@
             }
         });
 
-        lastUpdatedElement.textContent = new Date().toLocaleTimeString('es-MX');
-        console.log('Dashboard actualizado con éxito (JSONP).');
-    }
-
-    // --------------------------------------------------
-    // FUNCIÓN DE CARGA JSONP
-    // --------------------------------------------------
-
-    function actualizarDashboard() {
-        document.getElementById('last-updated').textContent = 'Actualizando...';
-
-        // Crea el script tag para inyectar la URL con el callback
-        const script = document.createElement('script');
-        // Se añade ?callback=handleMetricsResponse a la URL de la API
-        script.src = API_URL_BASE + '?callback=handleMetricsResponse'; 
-        
-        // Manejo de errores (si el script no carga por fallo de red)
-        script.onerror = function() {
-            document.getElementById('last-updated').textContent = 'ERROR (Fallo de red al cargar el script)';
-            console.error('Fallo de red/API: No se pudo cargar el script JSONP.');
-        };
-
-        // Elimina el script tag anterior para evitar duplicados
-        const oldScript = document.getElementById('jsonp-script');
-        if (oldScript) { oldScript.remove(); }
-
-        script.id = 'jsonp-script';
-        document.head.appendChild(script);
+        document.getElementById('last-updated').textContent = new Date().toLocaleTimeString('es-MX');
+        console.log('Dashboard actualizado con éxito (XHR).');
     }
 
     // Inicia la actualización automática
