@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Métricas del Wave - Neumorfismo</title>
+    
+    <style>
+        /* --- 1. Variables y Base --- */
+        :root {
+            --base-color: #EBF0F6; /* Color de fondo muy claro */
+            --light-shadow: #FFFFFF;
+            --dark-shadow: #A3B1C6;
+            --main-text-color: #4D586A;
+            --accent-color: #007bff; /* Azul para resaltar */
+            --border-radius: 16px;
+        }
+
+        body {
+            background: var(--base-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--main-text-color);
+            margin: 0;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #3C475A;
+            font-weight: 300;
+        }
+
+        /* --- 2. Contenedor de Agentes (Grid) --- */
+        .dashboard-grid {
+            display: grid;
+            /* Se ajusta automáticamente entre 350px y 1 columna */
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
+            gap: 30px; /* Espacio entre las tarjetas */
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        /* --- 3. La Tarjeta Neumórfica (Agent Card) --- */
+        .agent-card {
+            background: var(--base-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: default;
+            
+            /* Sombra de Extrusión (Outset) - Neumorfismo Clásico */
+            box-shadow: 10px 10px 20px var(--dark-shadow),
+                        -10px -10px 20px var(--light-shadow);
+        }
+
+        .agent-card:hover {
+            /* Ligero efecto de elevación en hover */
+            box-shadow: 15px 15px 30px var(--dark-shadow),
+                        -15px -15px 30px var(--light-shadow);
+        }
+
+        /* --- 4. Encabezado de la Tarjeta --- */
+        .card-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #C9D4E1; 
+        }
+
+        .card-header h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.8em;
+            color: #3C475A;
+        }
+
+        .card-header p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #8C99A9;
+        }
+
+        /* --- 5. Diseño de Métricas (Sections) --- */
+        .metric-section {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--base-color);
+            /* Sombra de Presión (Inset) para la sección */
+            box-shadow: inset 4px 4px 8px var(--dark-shadow), 
+                        inset -4px -4px 8px var(--light-shadow);
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #5B687A;
+            margin-bottom: 10px;
+            font-size: 1em;
+            text-transform: uppercase;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dashed #D6DCE5;
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            /* La clase JS eliminará y agregará el color dinámicamente */
+        }
+
+        /* --- 6. Estilos de Resaltado --- */
+        .highlight-rnk {
+            background: #D9E3EF;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--accent-color);
+            box-shadow: 2px 2px 5px var(--dark-shadow), -2px -2px 5px var(--light-shadow);
+        }
+
+        /* Colores de Alerta y Semáforo */
+        .bad-metric {
+            color: #e74c3c; /* Rojo para algo negativo */
+        }
+        
+        .warn-metric {
+            color: #f39c12; /* Naranja para advertencia */
+        }
+        
+        .good-metric {
+            color: #2ecc71; /* Verde para algo positivo */
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Dashboard de Métricas del Wave: <br>Noviembre 2025</h1>
+    <p style="text-align: center; color: #8C99A9;">Última actualización: <span id="last-updated">Cargando...</span></p>
+
+    <div class="dashboard-grid">
+
+        <div class="agent-card" id="agent-card-6">
+            <div class="card-header">
+                <h2>Mauricio Cardenas Morales</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk good-metric">#6</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">99.40</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value good-metric metric-qa">93%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value good-metric metric-dnc">95.80%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value good-metric metric-ce-penalty">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-8">
+            <div class="card-header">
+                <h2>Jesus Pluma Pluma</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk good-metric">#8</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">97.80</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value good-metric metric-qa">91%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value good-metric metric-dnc">99.20%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value good-metric metric-ce-penalty">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-10">
+            <div class="card-header">
+                <h2>Joshua Hernandez Heredia</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk good-metric">#10</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value warn-metric metric-lateness">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">99.50</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value good-metric metric-qa">93%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value good-metric metric-dnc">93.60%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value good-metric metric-ce-penalty">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-112">
+            <div class="card-header">
+                <h2>Juan Eduardo Mateo Martinez</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk warn-metric">#112</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value warn-metric metric-absences">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">93.50</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">71%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">103.20%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-146">
+            <div class="card-header">
+                <h2>Jose Manuel Hernandez Rosas</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk warn-metric">#146</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value bad-metric metric-lateness">3</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">97.50</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value good-metric metric-qa">42%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value good-metric metric-dnc">94.70%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-147">
+            <div class="card-header">
+                <h2>Pilar Ivonne Lugo Sanchez</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk warn-metric">#147</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">94.60</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">73%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value warn-metric metric-dnc">97.80%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-150">
+            <div class="card-header">
+                <h2>Angel Israel Lopez Garcia</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#150</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">96.50</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">74%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value warn-metric metric-dnc">95.10%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-167">
+            <div class="card-header">
+                <h2>Leonardo Marron Morales</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#167</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">98.30</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">72%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value warn-metric metric-dnc">90.10%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-179">
+            <div class="card-header">
+                <h2>Andrea Berenice Leon Ramirez</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#179</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">97.60</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">65%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value warn-metric metric-dnc">90.10%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">0.5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-194">
+            <div class="card-header">
+                <h2>Kelly Juarez Rivera</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#194</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value bad-metric metric-lateness">5</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">90.50</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">85%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">83.40%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">1</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="agent-card" id="agent-card-199">
+            <div class="card-header">
+                <h2>Zagriht Emmanuel Arriaga Molina</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#199</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value warn-metric metric-lateness">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">98.40</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">76%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">89.10%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">0.5</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="agent-card" id="agent-card-234">
+            <div class="card-header">
+                <h2>Pedro Jimenez Garduno</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#234</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value bad-metric metric-absences">2</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">90.10</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">45%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">93.70%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-239">
+            <div class="card-header">
+                <h2>Reynier Jhonnathan Ocampo Zavala</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#239</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value warn-metric metric-absences">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">91.40</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">79%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">90.10%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">1</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="agent-card" id="agent-card-244">
+            <div class="card-header">
+                <h2>Alicia Hernandez Nochebuena</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#244</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value warn-metric metric-lateness">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">97.60</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">77%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">84.80%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">0.5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-247">
+            <div class="card-header">
+                <h2>Jesus Uriel Dimas Mena</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#247</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">97.50</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">64%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">84.30%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">2</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="agent-card" id="agent-card-254">
+            <div class="card-header">
+                <h2>Pedro Ortiz Cisneros</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#254</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value bad-metric metric-lateness">4</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">97.10</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">78%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">82.40%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-277">
+            <div class="card-header">
+                <h2>Set Bernal Rincon</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#277</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value bad-metric metric-lateness">4</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value warn-metric metric-absences">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value bad-metric metric-online-time">86.70</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">54%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">94.10%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-324">
+            <div class="card-header">
+                <h2>Jose Cruz Perez Reyes</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#324</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">95.90</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">N/A</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">78.80%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value warn-metric metric-ce-penalty">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-343">
+            <div class="card-header">
+                <h2>Jose Eduardo Monroy Romero</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#343</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value bad-metric metric-lateness">7</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">93.80</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">53%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">71.10%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-346">
+            <div class="card-header">
+                <h2>Gabriela Mota Cruz</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#346</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value bad-metric metric-lateness">5</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value good-metric metric-absences">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">93.30</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">25%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">66.20%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-356">
+            <div class="card-header">
+                <h2>Mario Ivan Reyes Segura</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#356</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value bad-metric metric-absences">2</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value bad-metric metric-online-time">0.00</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">N/A</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">100.0%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-376">
+            <div class="card-header">
+                <h2>Daniela Hernandez Avila</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#376</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value bad-metric metric-lateness">4</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value warn-metric metric-absences">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value metric-online-time">91.80</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">58%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">73.70%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-403">
+            <div class="card-header">
+                <h2>Martha Gandara Reyes</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#403</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value warn-metric metric-lateness">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value bad-metric metric-absences">2</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value bad-metric metric-online-time">88.10</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">52%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">75.51%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">4</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-407">
+            <div class="card-header">
+                <h2>Daniel Fabrizio Arriaga Palacios</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#407</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value warn-metric metric-lateness">2</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value warn-metric metric-absences">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value bad-metric metric-online-time">87.00</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">44%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">73.60%</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value bad-metric metric-ce-penalty">4</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="agent-card" id="agent-card-434">
+            <div class="card-header">
+                <h2>Marvin Morales Torres</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#434</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value warn-metric metric-absences">1</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value bad-metric metric-online-time">0.00</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">N/A</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">N/A</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value good-metric metric-ce-penalty">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="agent-card" id="agent-card-437">
+            <div class="card-header">
+                <h2>Blanca Lorena Zepeda Marin</h2>
+                <p>SUPERVISOR: David Ossiel Robles Xicotencatl</p>
+            </div>
+            
+            <div class="highlight-rnk">
+                RANKING: <span class="metric-value metric-rnk bad-metric">#437</span>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⏰ Puntualidad y Asistencia (Mes de Evaluación: 2025-11-01)</div>
+                <div class="metric-item">
+                    <span>Total Retrasos (min):</span>
+                    <span class="metric-value good-metric metric-lateness">0</span>
+                </div>
+                <div class="metric-item">
+                    <span>Ausencias Injustificadas:</span>
+                    <span class="metric-value bad-metric metric-absences">2</span>
+                </div>
+                <div class="metric-item">
+                    <span>Horas Conectado (hrs):</span>
+                    <span class="metric-value bad-metric metric-online-time">0.00</span>
+                </div>
+            </div>
+
+            <div class="metric-section">
+                <div class="section-title">⭐ Desempeño y Calidad</div>
+                <div class="metric-item">
+                    <span>Calidad Llamada (QA - %):</span>
+                    <span class="metric-value bad-metric metric-qa">N/A</span>
+                </div>
+                <div class="metric-item">
+                    <span>Satisfacción Cliente (DNC - %):</span>
+                    <span class="metric-value bad-metric metric-dnc">N/A</span>
+                </div>
+                <div class="metric-item">
+                    <span>Penalización Repetición:</span>
+                    <span class="metric-value good-metric metric-ce-penalty">0</span>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+
+    <script>
+    // --------------------------------------------------
+    // SCRIPT PARA VINCULACIÓN DE DATOS EN TIEMPO REAL (Método JSONP)
+    // --------------------------------------------------
+
+    // 🟢 ¡TU URL DE API! 🟢
+    // Nota: Esta URL no cambia, pero le añadiremos el parámetro 'callback'
+    const API_URL_BASE = 'https://script.google.com/a/macros/plata.work/s/AKfycbwK97hq4EeXw2ERoAB2y_iYf8CVJgHn-H_ntFvHUVi3HPw8EwVtu3LBZNn4BIFmzGMp/exec'; 
+    
+    // Frecuencia de actualización: 30 segundos
+    const UPDATE_INTERVAL_MS = 30000; 
+
+    /**
+     * Aplica la clase de color (semáforo) al valor de una métrica.
+     * [Este código de semáforo es el mismo que antes]
+     */
+    function applyColor(element, metricName, value) {
+        element.classList.remove('good-metric', 'warn-metric', 'bad-metric');
+        const numValue = parseFloat(value);
+        if (isNaN(numValue)) return; 
+        // ... (lógica del semáforo: QA/DNC alto es bueno; Lateness bajo es bueno)
+        switch (metricName) {
+            case 'QA':
+            case 'DNC':
+                if (numValue >= 95) { element.classList.add('good-metric'); } 
+                else if (numValue >= 90) { element.classList.add('warn-metric'); } 
+                else { element.classList.add('bad-metric'); }
+                break;
+            case 'TOTAL_LATENESS': 
+            case 'TOTAL_UNJ_ABS': 
+            case 'Repeated CE penalty': 
+                if (numValue === 0) { element.classList.add('good-metric'); } 
+                else if (numValue <= 1) { element.classList.add('warn-metric'); } 
+                else { element.classList.add('bad-metric'); }
+                break;
+            default: break;
+        }
+    }
+
+    /**
+     * Función que recibe los datos directamente de la API (JSONP).
+     * El nombre de esta función debe coincidir con el parámetro 'callback'.
+     */
+    window.handleMetricsResponse = function(data) {
+        const lastUpdatedElement = document.getElementById('last-updated');
+        
+        if (!data || data.error) {
+            lastUpdatedElement.textContent = 'ERROR (API: ' + (data ? data.error : 'Sin datos') + ')';
+            console.error('Error al recibir datos de la API:', data);
+            return;
+        }
+
+        data.forEach(agente => {
+            const agenteRNK = agente.RNK; 
+            const tarjeta = document.getElementById(`agent-card-${agenteRNK}`);
+
+            if (tarjeta) {
+                if (agente.AGENT_NAME) tarjeta.querySelector('h2').textContent = agente.AGENT_NAME;
+                if (agente.SUPERVISOR) tarjeta.querySelector('.card-header p').textContent = `SUPERVISOR: ${agente.SUPERVISOR}`;
+
+                const metricsMap = {
+                    'RNK': { selector: '.metric-rnk', format: (val) => `#${val}` },
+                    'TOTAL_LATENESS': { selector: '.metric-lateness', format: (val) => val },
+                    'TOTAL_UNJ_ABS': { selector: '.metric-absences', format: (val) => val },
+                    'ONLINE_TIME': { selector: '.metric-online-time', format: (val) => (parseFloat(val) * 100).toFixed(2) }, 
+                    'QA': { selector: '.metric-qa', format: (val) => `${val}%` },
+                    'DNC': { selector: '.metric-dnc', format: (val) => `${val}%` },
+                    'Repeated CE penalty': { selector: '.metric-ce-penalty', format: (val) => val },
+                };
+                
+                for (const key in metricsMap) {
+                    if (agente.hasOwnProperty(key)) {
+                        const { selector, format } = metricsMap[key];
+                        const element = tarjeta.querySelector(selector);
+                        let value = agente[key];
+
+                        if (value === null || value === "N/A") {
+                            element.textContent = value;
+                            element.classList.remove('good-metric', 'warn-metric', 'bad-metric');
+                            continue;
+                        }
+
+                        if (element) {
+                            element.textContent = format(value);
+                            applyColor(element, key, value);
+                        }
+                    }
+                }
+            }
+        });
+
+        lastUpdatedElement.textContent = new Date().toLocaleTimeString('es-MX');
+        console.log('Dashboard actualizado con éxito (JSONP).');
+    }
+
+    // --------------------------------------------------
+    // FUNCIÓN DE CARGA JSONP
+    // --------------------------------------------------
+
+    function actualizarDashboard() {
+        document.getElementById('last-updated').textContent = 'Actualizando...';
+
+        // Crea el script tag para inyectar la URL con el callback
+        const script = document.createElement('script');
+        // Se añade ?callback=handleMetricsResponse a la URL de la API
+        script.src = API_URL_BASE + '?callback=handleMetricsResponse'; 
+        
+        // Manejo de errores (si el script no carga por fallo de red)
+        script.onerror = function() {
+            document.getElementById('last-updated').textContent = 'ERROR (Fallo de red al cargar el script)';
+            console.error('Fallo de red/API: No se pudo cargar el script JSONP.');
+        };
+
+        // Elimina el script tag anterior para evitar duplicados
+        const oldScript = document.getElementById('jsonp-script');
+        if (oldScript) { oldScript.remove(); }
+
+        script.id = 'jsonp-script';
+        document.head.appendChild(script);
+    }
+
+    // Inicia la actualización automática
+    actualizarDashboard(); 
+    setInterval(actualizarDashboard, UPDATE_INTERVAL_MS); 
+</script>
+</body>
+</html>
